@@ -26,20 +26,14 @@ end)
 core.register_on_receiving_chat_message(function(message)
 	-- Process chat messages
 	if chat_messages_allowed then
-		print("§ " .. message) -- this will get logged in luanti/debug.txt
-		return true -- don't display the message twice!
-	else
-		return false -- resume normal processing
+		core.log("action", "§ " .. message)
 	end
+	return false -- resume normal processing
 end)
 
 core.register_on_modchannel_message(function(channel, sender, message)
 	-- Process channel messages
 	if chat_messages_allowed then
-		print("§" .. channel .. " <" .. sender .. "> " .. message)
-		return true -- don't display the message twice!
-	else
-		return false -- resume normal processing
+		core.log("action", "§" .. channel .. " <" .. sender .. "> " .. message)
 	end
-	-- NB: I'm not sure channel messages return codes work the same way than ordinary chat messages
 end)
