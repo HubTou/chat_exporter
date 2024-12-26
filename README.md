@@ -1,11 +1,32 @@
-# chat_exporter
-A [Luanti](https://www.luanti.org/) client-side mod enabling the export of chat or channel messages in Luanti's debug.txt file as it's not directly possible to copy/paste them.
+# chat_exporter / monitor / translator
+**chat_exporter** is a [Luanti](https://www.luanti.org/) client-side mod:
+* enabling the continuous export of chat or channel messages in Luanti's *debug.txt* file as it's not directly possible to copy/paste them from the game
+* adding 2 local commands:
+  * ".tr LANG MESSAGE" for requesting the translation of a MESSAGE in the LANG language,
+  * ".lang LANG" to define the language in which you want your translations. It's initialized from your Luanti [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)) confguration, saved to disk after each modification and reloaded automatically.
+* These LANG parameters are 2 letters code from the [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) standard.
 
-The messages are prefixed with the "§" character in order to ease their extraction and processing by an external tool.
+**chat_monitor** and **chat_translator_XXX** are Python command-line scripts (use one or the other) opening a secondary window:
+  * the first one automatically extracts chat_exporter lines (prefixed with the "§" character) from the *debug.txt* file and lets you copy/paste them into your favourite translation tool. If you are a developer, it's also a stub you can adapt in order to use other translation API.
+  * the second one adds automatic translation:
+    * of messages received from other players (no need to translate yours!),
+    * or messages you requested a translation for. On Windows operating systems, this translation is automatically copied in the clipboard for direct use in Luanti.
+  * These translations are made in your default "locale" language or the one you selected with the ".lang" command, or the one saved from a previous session.
 
-The goal was to detect the language used and translate foreign ones with an AI tool such as [LibreTranslate](https://github.com/LibreTranslate/LibreTranslate).
+There were server-side mods doing this kind of things, but the idea here was to be able to do it on any server...
 
-There are server-side mods doing that, but the idea was to be able to do it on any server...
+## An example with chat_translator_deeptranslator
+![An example with chat_translator_deeptranslator](https://github.com/HubTou/chat_exporter/blob/main/screenshots/example.png)
+
+Here you will see:
+* a first line telling you if the automatic clipboard loading works (Windows) or not (Unix)
+* in this peculiar example, the languages available for translations (depends on the translation API used)
+* a reminder that you can exit this secondary window with the Control-C key combination
+* a line indicating the player name and his default or saved target language
+* then the chat and channel messages in Luanti's format (channel name, sender, message) along with their translation or an error message
+  * the translator can fail if you select a non existing or not available language code
+  * or in case of network issues if you use an online translator
+  * etc.
 
 ## Installation
 1. Manually download the [latest release](https://github.com/HubTou/chat_exporter/releases) of this mod (as client-side mods download is not handled yet through Luanti's User Interface)
