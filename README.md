@@ -55,6 +55,8 @@ Here you will see:
 Note: If you haven't upgraded yet to luanti 5.10.0 or newer, your *luanti* directory will be called *minetest*...
 
 ## Possible future directions
+Relaxing the 2 characters language code check in order to cope with Google Translate longer codes.
+
 Maybe adding a translation cache.
 
 I could also provide Python packages for the chat_translation Python scripts in order to automatically handle their dependencies on third-parties packages.
