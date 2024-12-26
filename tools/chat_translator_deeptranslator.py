@@ -20,6 +20,16 @@ Lines processed:
 -- Translation request in ISO 639-1 language_code:
 -- if possible, translation should be copied in the clipboard
 §?language_code <player> message
+
+Translator used:
+================
+Deep translator
+https://github.com/nidhaloff/deep_translator
+https://pypi.org/project/deep-translator/
+https://deep-translator.readthedocs.io/en/latest/
+
+with Google Translate backend
+https://deep-translator.readthedocs.io/en/latest/usage.html#google-translate
 """
 
 import os
@@ -30,6 +40,8 @@ import time
 
 import clipboard
 import colorama
+
+from deep_translator import GoogleTranslator
 
 FILE_NAME = "debug.txt"
 SLEEP_TIME = 1
@@ -95,7 +107,7 @@ def translate_record(record, target_language):
     
     # Call your favourite translator software here
     try:
-        translation = "translation"
+        translation = GoogleTranslator(source='auto', target=target_language).translate(record["message"])
         print(f'{colorama.Fore.GREEN}{translation}{colorama.Style.RESET_ALL}')
     except:
         print(f'{colorama.Fore.RED}Translator failure{colorama.Style.RESET_ALL}')
@@ -117,6 +129,8 @@ try:
     print(f"{colorama.Fore.GREEN}This operating system supports automatically copying translated messages to the clipboard{colorama.Style.RESET_ALL}")
 except:
     print(f"{colorama.Fore.RED}This operating system DOES NOT support automatically copying translated messages to the clipboard{colorama.Style.RESET_ALL}")
+languages = GoogleTranslator().get_supported_languages(as_dict=True)
+print(f"{colorama.Fore.CYAN}Supported languages:{colorama.Style.RESET_ALL} {str(languages)}")
 print(f"{colorama.Fore.YELLOW}Press Control-C to exit{colorama.Style.RESET_ALL}")
 print()
 
