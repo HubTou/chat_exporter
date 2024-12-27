@@ -24,18 +24,18 @@ function log(message)
 end
 
 function is_a_language_code(input)
-  -- Test if the input is a possible ISO 639-1 language code
-  local function is_lowercase(character)
-    return (character >= 'a' and character <= 'z')
+  -- Test if the input is a possible ISO 639-1 language code (with Google Translate extensions such as "zh-CN")
+  local function is_letter(character)
+    return (character >= 'a' and character <= 'z') or (character >= 'A' and character <= 'Z')
   end
 
   for character in input:gmatch(".") do
-    if not is_lowercase(character) then
+    if not (is_letter(character) or character == "-") then
       return false
     end
   end
 
-  return #input == 2
+  return true
 end
 
 core.register_on_mods_loaded(function()

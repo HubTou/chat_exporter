@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" chat_monitor - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod
+""" chat_translator_deeptranslator - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod and translate them
 License: 3-clause BSD (see https://opensource.org/licenses/BSD-3-Clause)
 Author: Hubert Tournier
 
@@ -47,7 +47,7 @@ FILE_NAME = "debug.txt"
 SLEEP_TIME = 1
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: chat_monitor - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod v1.2.0 (December 26, 2024) by Hubert Tournier $"
+ID = "@(#) $Id: chat_translator_deeptranslator - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod and translate them v1.2.0 (December 27, 2024) by Hubert Tournier $"
 
 ####################################################################################################
 def handle_interrupt_signals(handler_function):
@@ -86,7 +86,9 @@ def get_record(line):
                     
         message = " ".join(words[2:])
         
-    return {"channel": channel, "sender": sender, "message": message}
+        return {"channel": channel, "sender": sender, "message": message}
+
+    return None
 
 ####################################################################################################
 def print_record(record, target_language):
@@ -181,7 +183,7 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
                     print(f"Target language for '{player_name}' is '{player_language}'")
                 elif record["channel"].startswith("?"):
                     receiver_language = record["channel"][1:]
-                    records[i]["channel"] = "translation"
+                    record["channel"] = "translation"
                     translate_record(record, receiver_language)
                 elif record["sender"] == player_name:
                     print_record(record, "")

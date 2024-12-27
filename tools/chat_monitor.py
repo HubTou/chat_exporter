@@ -35,7 +35,7 @@ FILE_NAME = "debug.txt"
 SLEEP_TIME = 1
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: chat_monitor - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod v1.2.0 (December 26, 2024) by Hubert Tournier $"
+ID = "@(#) $Id: chat_monitor - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod v1.2.0 (December 27, 2024) by Hubert Tournier $"
 
 ####################################################################################################
 def handle_interrupt_signals(handler_function):
@@ -53,7 +53,6 @@ def interrupt_handler_function(signal_number, current_stack_frame):
 ####################################################################################################
 def get_record(line):
     """ Extract a chat_exporter record from a debug.txt line """
-    line = line.strip()
     line = re.sub(r"^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]: ACTION\[Main\]: ", "", line)
     if line.startswith("§"):
         channel = ""
@@ -76,6 +75,8 @@ def get_record(line):
         message = " ".join(words[2:])
         
         return {"channel": channel, "sender": sender, "message": message}
+
+    return None
 
 ####################################################################################################
 def print_record(record, target_language):
@@ -127,7 +128,7 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
     current_record = 0
     last_starting_record = 0
     while True:
-        line = file.readline()
+        line = file.readline().strip()
         if line:
             record = get_record(line)
             if record is not None:    
@@ -158,7 +159,7 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
 
     # Now we read new records
     while True:
-        line = file.readline()
+        line = file.readline().strip()
         if line:
             record = get_record(line)
             if record is not None:    
@@ -168,7 +169,7 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
                     print(f"Target language for '{player_name}' is '{player_language}'")
                 elif record["channel"].startswith("?"):
                     receiver_language = record["channel"][1:]
-                    records[i]["channel"] = "translation"
+                    record["channel"] = "translation"
                     translate_record(record, receiver_language)
                 elif record["sender"] == player_name:
                     print_record(record, "")
