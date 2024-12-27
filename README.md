@@ -23,12 +23,13 @@ Here you will see:
 * in this peculiar example, the languages available for translations (depends on the translation API used)
   * Here I use the the [deep-translator](https://github.com/nidhaloff/deep-translator) translation API, with the [Google Translate](https://github.com/nidhaloff/deep-translator) engine
 * a reminder that you can exit this secondary window with the Control-C key combination
-* a line indicating the player name and his default or saved target language
+* a line indicating the player name and his saved or default target language which is written when the player's connect
 * then the chat and channel messages in Luanti's format ("channel name <sender> message text") along with their translation or an error message
   * the translator can fail if you select an unvailable or non existing language code, as shown here with the "jp" code instead of "ja" (japanese)
   * or in case of network issues if you use an online translator (for example with filtering proxies or excessive requests)
   * etc.
 * translation requests are displayed in the "translation" pseudo-channel.
+* the line indicating the player name and his new target language is caused by the usage of the ".lang it" command.
 
 ## Installation
 1. Manually download the [latest release](https://github.com/HubTou/chat_exporter/releases) of this mod (as client-side mods download is not handled yet through Luanti's User Interface)
