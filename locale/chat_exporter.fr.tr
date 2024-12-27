@@ -1,3 +1,3 @@
 # textdomain: chat_exporter
 Chat exporter (client-side)=Exporteur de tchat (côté client)
-Log the chat messages received=Journalise les messages reçus sur le tchat
+Log the chat messages received for translation=Journalise les messages reçus sur le tchat pour les traduire
