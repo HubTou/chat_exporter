@@ -47,7 +47,7 @@ FILE_NAME = "debug.txt"
 SLEEP_TIME = 1
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: chat_translator_deeptranslator - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod and translate them v1.2.0 (December 27, 2024) by Hubert Tournier $"
+ID = "@(#) $Id: chat_translator_deeptranslator - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod and translate them v1.2.1 (December 28, 2024) by Hubert Tournier $"
 
 ####################################################################################################
 def handle_interrupt_signals(handler_function):
@@ -141,8 +141,9 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
     records = []
     current_record = 0
     last_starting_record = 0
-    while True:
-        line = file.readline().strip()
+    lines = file.readlines()
+    for line in lines:
+        line = line.strip()
         if line:
             record = get_record(line)
             if record is not None:    
@@ -150,8 +151,6 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
                 if record["channel"].startswith("<"):
                     last_starting_record = current_record
                 current_record += 1
-        else:
-            break
 
     player_name = "unknown"
     player_language = "en"
