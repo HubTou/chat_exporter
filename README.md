@@ -25,11 +25,15 @@ Here you will see:
 * a reminder that you can exit this secondary window with the Control-C key combination
 * a line indicating the player name and his saved or default target language which is written when the player's connect
 * then the chat and channel messages in Luanti's format ("channel name <sender> message text") along with their translation or an error message
-  * the translator can fail if you select an unvailable or non existing language code, as shown here with the "jp" (japan) code instead of "ja" (japanese)
+  * the translator can fail if you select an unavailable or non existing language code, as shown here with the "jp" (japan) code instead of "ja" (japanese)
   * or in case of network issues if you use an online translator (for example with filtering proxies or excessive requests)
   * etc.
 * translation requests are displayed in the "translation" pseudo-channel.
 * the second line indicating the player name and his new target language is caused by the usage of the ".lang it" command.
+
+Privacy notice:
+* In this case translations are done on Google servers. They only receive the message body, not the sender game ID.
+* The triplets channel/sender/message are stored in the *debug.txt* file until it is removed by the player or overwritten by Luanti because of excessive size.
 
 ## Installation
 1. Manually download the [latest release](https://github.com/HubTou/chat_exporter/releases) of this mod (as client-side mods download is not handled yet through Luanti's User Interface)
