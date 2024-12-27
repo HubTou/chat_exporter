@@ -119,7 +119,7 @@ core.register_chatcommand("tr", {
 			-- The first parameter is supposed to be an ISO 639-1 language code
 			-- See https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
 			-- The other ones form the message to translate
-			message = string.gsub(param, words[1] .. " ", "", 1)
+			local message = string.gsub(param, words[1] .. " ", "", 1)
 			log("§?" .. words[1] .. " <" .. player_name .. "> " .. message)
 		end
 		
