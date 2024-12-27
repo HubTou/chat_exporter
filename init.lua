@@ -51,7 +51,6 @@ core.register_on_mods_loaded(function()
 		else
 			-- Get the log level configuration
 			local debug_log_level = core.settings:get("debug_log_level")
-			print("debug_log_level=" .. debug_log_level) -- TODO: DEBUG
 			if debug_log_level then
 				if debug_log_level == "" then
 					logging_allowed = false
@@ -63,8 +62,8 @@ core.register_on_mods_loaded(function()
 					print(core.colorize("palegreen", "Client-side mod '" .. mod_name .. "' loaded. Printing to debug.txt"))
 				end
 			else
-				action_log_level = true -- TODO: Verify if it works
-				print(core.colorize("palegreen", "Client-side mod '" .. mod_name .. "' loaded. Logging to debug.txt"))
+				logging_allowed = false
+				print(core.colorize("orange", "Client-side mod '" .. mod_name .. "' loaded but server restricts logging"))
 			end
 		end
 	end
@@ -77,10 +76,9 @@ for i=1,10 do
 			player_name = core.localplayer:get_name()
 
 			player_language = mod_storage:get_string(player_name .. "_lang")
-			if not player_language then
+			if not player_language or player_language == "" then
 				local gettext_locale = ""
 				gettext_locale, player_language = core.get_language()
-				-- TODO: Try core.get_player_information(player_name).lang_code though it should work only server-side
 			end
 			log("§<" .. player_language .. " <" .. player_name .. "> Player target language initialized")
 		end
