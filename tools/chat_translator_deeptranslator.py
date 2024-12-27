@@ -65,7 +65,7 @@ def interrupt_handler_function(signal_number, current_stack_frame):
 ####################################################################################################
 def get_record(line):
     """ Extract a chat_exporter record from a debug.txt line """
-    line = line.strip()
+    line = re.sub(r"^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]: ACTION\[Main\]: ", "", line)
     if line.startswith("§"):
         channel = ""
         sender = ""
@@ -86,7 +86,7 @@ def get_record(line):
                     
         message = " ".join(words[2:])
         
-        return {"channel": channel, "sender": sender, "message": message}
+    return {"channel": channel, "sender": sender, "message": message}
 
 ####################################################################################################
 def print_record(record, target_language):
@@ -135,12 +135,12 @@ print(f"{colorama.Fore.YELLOW}Press Control-C to exit{colorama.Style.RESET_ALL}"
 print()
 
 with open(FILE_NAME, "r", encoding="utf-8") as file:
-    # We first read all existing records (lines starting with §) noting the last session starting one (§>)
+    # We first read all existing records (lines starting with §) noting the last session starting one (§<)
     records = []
     current_record = 0
-    last_starting_record = None
+    last_starting_record = 0
     while True:
-        line = file.readline()
+        line = file.readline().strip()
         if line:
             record = get_record(line)
             if record is not None:    
@@ -151,8 +151,8 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
         else:
             break
 
-    player_name = ""
-    player_language = ""
+    player_name = "unknown"
+    player_language = "en"
 
     # Then we process records from the last session starting one
     for i in range(last_starting_record, len(records)):
@@ -171,7 +171,7 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
 
     # Now we read new records
     while True:
-        line = file.readline()
+        line = file.readline().strip()
         if line:
             record = get_record(line)
             if record is not None:    
