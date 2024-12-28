@@ -59,13 +59,25 @@ Privacy notice:
 
 Note: If you haven't upgraded yet to luanti 5.10.0 or newer, your *luanti* directory will be called *minetest*...
 
+## Usage
+Launch Luanti and the chosen script, preferably in this order (otherwise you'll get the translation of your previous gaming session).
+
+It's of course better if you have 2 or more screens, one for the game, on for the translated chat, one for your [server map](https://github.com/HubTou/HubTou/wiki/Making-a-Luanti-server-local-map)... 😃
+
 ## Possible future directions
-Maybe adding a translation cache.
+Add commands for direct translation of messages sent by the user: chat messages in the server language, channel messages in the channel language, private message in the destination player language. With memorization of these languages from one gaming sessions to the other. It would be even better if there was a way to automatically intercept messages sent by the user and to get the server locale or preferred language.
+
+Maybe adding a translation cache, along with common gaming abbreviations (ty, wb, brb, etc.).
+
+Other translation scripts would be welcome, especially some with offline processing (for example, using things like [LibreTranslate](https://github.com/libretranslate/libretranslate) or [Argos Translate](https://github.com/argosopentech/argos-translate) in local setup, once their installation procedure are repaired). Other developers are also welcome to submit or tell me about alternative translators for inclusion in *tools* or reference on this page.
 
 I could also provide Python packages for the chat_translation Python scripts in order to automatically handle their dependencies on third-parties packages.
 
-Other developers are welcome to submit or tell me about alternative translators for inclusion in *tools* or reference on this page.
-
 When I'll be done with my client-side mods development list, I'll probably group them in a "comfort" modpack.
 
+For those with extreme privacy sensibility, it would be possible to provide a configurable option to announce in the chat the start/stop of chat recording by a player, though I would find this bothersome...
+
 Go to [Discussions](https://github.com/HubTou/chat_exporter/discussions) if you want to suggest other things...
+
+## One last word
+This [open source](https://opensource.org/osd) software is free for any use. If you like it, I would gladly appreciate a GitHub ⭐
