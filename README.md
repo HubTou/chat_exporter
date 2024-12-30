@@ -1,15 +1,23 @@
 # chat_exporter / monitor / translator
-**chat_exporter** is a [Luanti](https://www.luanti.org/) client-side mod:
+
+## Too long to read
+These software enable you to play on your favourite [Luanti](https://www.luanti.org/) servers in **your language**:
+* chat and channel messages received are translated in the language that you choose
+* chat, channel and private messages sent can be translated in the server, channel or target user language.
+
+## What's in it?
+**chat_exporter** is a [Luanti client-side mod](https://github.com/minetest/minetest/blob/master/doc/client_lua_api.md):
 * enabling the continuous export of chat or channel messages into Luanti's *debug.txt* file as it's not directly possible to copy/paste them from the game
-* adding 2 local commands:
+* adding 3 local commands:
   * ".tr LANG MESSAGE" for requesting the translation of a MESSAGE in the LANG language,
   * ".lang LANG" to define the language in which you want your translations. It's initialized from your Luanti [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)) confguration, saved to disk after each modification and reloaded automatically afterwards.
-* These LANG parameters are mostly 2 letters code from the [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) standard, or in rare cases things like "zh-CN" for simplified chinese)
+  * ".slang LANG" to define the server language. It's saved to disk after each modification and reloaded automatically afterwards.
+* These LANG parameters are mostly 2 letters code from the [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) standard, or in rare cases things like "zh-CN" (for simplified chinese) depending on the translator used.
 
 **chat_monitor** and **chat_translator_XXX** are Python command-line scripts (use one or the other) opening a secondary window:
   * the first one automatically extracts chat_exporter lines (prefixed with the "§" character) from the *debug.txt* file and lets you copy/paste them into your favourite translation tool. If you are a developer, it's also a stub you can adapt in order to use other translation API.
   * the second one adds automatic translation:
-    * of messages received from other players (no need to translate yours!),
+    * of messages received from other players,
     * or messages you requested a translation for. On Windows operating systems, this translation is **automatically** copied into the clipboard for direct paste in Luanti's chat (it works only in this direction).
   * These translations are made in your default "locale" language or the one you selected with the ".lang" command, or the one saved from a previous session.
 
@@ -62,10 +70,12 @@ Note: If you haven't upgraded yet to luanti 5.10.0 or newer, your *luanti* direc
 ## Usage
 Launch Luanti and the chosen script, preferably in this order (otherwise you'll get the translation of your previous gaming session).
 
-It's of course better if you have 2 or more screens, one for the game, on for the translated chat, one for your [server map](https://github.com/HubTou/HubTou/wiki/Making-a-Luanti-server-local-map)... 😃
+It's of course better if you have 2 or more screens, one for the game, on for the translated chat, one for [your server map](https://github.com/HubTou/HubTou/wiki/Making-a-Luanti-server-local-map)... 😃
 
 ## Possible future directions
-Add commands for direct translation of messages sent by the user: chat messages in the server language, channel messages in the channel language, private message in the destination player language. With memorization of these languages from one gaming sessions to the other. It would be even better if there was a way to automatically intercept messages sent by the user and to get the server locale or preferred language.
+Ongoing:
+* v1.3: Add commands for direct translation of messages sent by the user: chat messages in the server language, channel messages in the channel language, private message in the destination player language. With memorization of these languages from one gaming sessions to the other.
+* v2.0: Automatically intercept messages sent by the user and translate them in the server language.
 
 Maybe adding a translation cache, along with common gaming abbreviations (ty, wb, brb, etc.).
 

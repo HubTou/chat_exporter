@@ -9,8 +9,10 @@ local mod_storage = core.get_mod_storage()
 local chat_messages_allowed = true
 local logging_allowed = true
 local action_log_level = false
-local player_language = ""
+local server_name = ""
+local server_language = ""
 local player_name = ""
+local player_language = ""
 
 function log(message)
 	-- Log a message and send a return code depending on the method used
@@ -67,6 +69,15 @@ core.register_on_mods_loaded(function()
 			end
 		end
 	end
+
+	-- Get the server name and (if defined) the server language
+	local server_info = core.get_server_info()
+	server_name = server_info.address .. ":" .. server_info.port
+	log("§# <" .. server_name .. "> Server gaming session started")
+	server_language = mod_storage:get_string(server_name .. "_lang")
+	if server_language ~= "" then
+		log("§>" .. server_language .. " <" .. server_name .. "> Server target language initialized")
+	end
 end)
 
 -- Wait for core.localplayer initialization
@@ -74,9 +85,8 @@ for i=1,10 do
 	core.after(i, function()
 		if player_name == "" and core.localplayer then
 			player_name = core.localplayer:get_name()
-
 			player_language = mod_storage:get_string(player_name .. "_lang")
-			if not player_language or player_language == "" then
+			if player_language == "" then
 				local gettext_locale = ""
 				gettext_locale, player_language = core.get_language()
 			end
@@ -142,7 +152,29 @@ core.register_chatcommand("lang", {
 
 		mod_storage:set_string(player_name .. "_lang", words[1])
 		if chat_messages_allowed and logging_allowed then
-			log("§=" .. words[1] .. " <" .. player_name .. "> Player target language redefined")
+			log("§<" .. words[1] .. " <" .. player_name .. "> Player target language redefined")
+		end
+
+		return true
+	end
+})
+
+core.register_chatcommand("slang", {
+	-- Chat command for defining the server's target language
+    params = ".slang LANG",
+    description = "Define server's target language",
+	func = function(param)
+		param = string.trim(param)
+		local words = string.split(param, " ")
+
+		if #words ~= 1 or not is_a_language_code(words[1]) then
+			print("ERROR: usage: .slang LANG (where LANG is an ISO 639-1 language code)")
+			return false
+		end
+
+		mod_storage:set_string(server_name .. "_lang", words[1])
+		if chat_messages_allowed and logging_allowed then
+			log("§>" .. words[1] .. " <" .. server_name .. "> Server target language redefined")
 		end
 
 		return true

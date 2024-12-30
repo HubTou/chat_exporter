@@ -5,11 +5,16 @@ Author: Hubert Tournier
 
 Lines processed:
 ================
--- Player language and name initialization:
-§<language_code <player> Player target language initialized
+-- Server gamin session started
+§# <server> Server gaming session started
 
--- Player language redefinition:
-§=language_code <player> Player target language redefined
+-- Server language and name initialization or redefinition:
+§>language_code <server> Server target language initialized
+§>language_code <server> Server target language redefined
+
+-- Player language and name initialization or redefinition:
+§<language_code <player> Player target language initialized
+§<language_code <player> Player target language redefined
 
 -- Chat message:
 § <player> message
@@ -22,7 +27,6 @@ Lines processed:
 §?language_code <player> message
 """
 
-import os
 import re
 import signal
 import sys
@@ -35,14 +39,12 @@ FILE_NAME = "debug.txt"
 SLEEP_TIME = 1
 
 # Version string used by the what(1) and ident(1) commands:
-ID = "@(#) $Id: chat_monitor - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod v1.2.1 (December 28, 2024) by Hubert Tournier $"
+ID = "@(#) $Id: chat_monitor - Monitor Luanti's debug.txt file for lines written by the chat_exporter client-side mod v1.2.2 (December 30, 2024) by Hubert Tournier $"
 
 ####################################################################################################
 def handle_interrupt_signals(handler_function):
     """ Processes interrupt signals """
     signal.signal(signal.SIGINT, handler_function)
-    if os.name == "posix":
-        signal.signal(signal.SIGPIPE, handler_function)
 
 ####################################################################################################
 def interrupt_handler_function(signal_number, current_stack_frame):
@@ -58,22 +60,22 @@ def get_record(line):
         channel = ""
         sender = ""
         message = ""
-                
+
         words = line.split()
-                
+
         if len(words) < 3:
             return None
-                
+
         if len(words[0]) > 1:
             channel = words[0][1:]
 
-        if re.match("<[-0-9a-zA-Z_]*>$", words[1]):
+        if re.match("<[-0-9a-zA-Z_.:]*>$", words[1]):
             sender = words[1][1:-1]
         else:
             return None
-                    
+
         message = " ".join(words[2:])
-        
+
         return {"channel": channel, "sender": sender, "message": message}
 
     return None
@@ -94,8 +96,10 @@ def print_record(record, target_language):
 def translate_record(record, target_language):
     """ Stub function to call a translator """
     print_record(record, target_language)
-    
-    # Call your favourite translator software here
+ 
+    ################################################   
+    # Call your favourite translator software here #
+    ################################################   
     try:
         translation = "translation"
         print(f'{colorama.Fore.GREEN}{translation}{colorama.Style.RESET_ALL}')
@@ -120,9 +124,8 @@ try:
 except:
     print(f"{colorama.Fore.RED}This operating system DOES NOT support automatically copying translated messages to the clipboard{colorama.Style.RESET_ALL}")
 print(f"{colorama.Fore.YELLOW}Press Control-C to exit{colorama.Style.RESET_ALL}")
-print()
 
-with open(FILE_NAME, "r", encoding="utf-8") as file:
+with open(FILE_NAME, "r", encoding="utf-8", errors="ignore") as file:
     # We first read all existing records (lines starting with §) noting the last session starting one (§<)
     records = []
     current_record = 0
@@ -132,21 +135,31 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
         line = line.strip()
         if line:
             record = get_record(line)
-            if record is not None:    
+            if record is not None:
                 records.append(record)
-                if record["channel"].startswith("<"):
+                if record["channel"].startswith("#"):
                     last_starting_record = current_record
                 current_record += 1
 
+    server_name = ""
+    server_language = ""
     player_name = "unknown"
     player_language = "en"
 
     # Then we process records from the last session starting one
     for i in range(last_starting_record, len(records)):
-        if records[i]["channel"].startswith("<") or records[i]["channel"].startswith("="):
+        if records[i]["channel"].startswith("#"):
+            server_name = records[i]["sender"]
+            server_language = ""
+            print(f"\n-----[ {server_name} ]---------------------------------------------")
+        elif records[i]["channel"].startswith("<") or records[i]["channel"].startswith("="):
             player_name = records[i]["sender"]
             player_language = records[i]["channel"][1:]
-            print(f"Target language for '{player_name}' is '{player_language}'")
+            print(f"Target language for player '{player_name}' is '{player_language}'")
+        elif records[i]["channel"].startswith(">"):
+            server_name = records[i]["sender"]
+            server_language = records[i]["channel"][1:]
+            print(f"Target language for server '{server_name}' is '{server_language}'")
         elif records[i]["channel"].startswith("?"):
             receiver_language = records[i]["channel"][1:]
             records[i]["channel"] = "translation"
@@ -162,10 +175,18 @@ with open(FILE_NAME, "r", encoding="utf-8") as file:
         if line:
             record = get_record(line)
             if record is not None:    
-                if record["channel"].startswith("<") or record["channel"].startswith("="):
+                if record["channel"].startswith("#"):
+                    server_name = record["sender"]
+                    server_language = ""
+                    print(f"\n-----[ {server_name} ]---------------------------------------------")
+                elif record["channel"].startswith("<") or record["channel"].startswith("="):
                     player_name = record["sender"]
                     player_language = record["channel"][1:]
                     print(f"Target language for '{player_name}' is '{player_language}'")
+                elif record["channel"].startswith(">"):
+                    server_name = record["sender"]
+                    server_language = record["channel"][1:]
+                    print(f"Target language for server '{server_name}' is '{server_language}'")
                 elif record["channel"].startswith("?"):
                     receiver_language = record["channel"][1:]
                     record["channel"] = "translation"
